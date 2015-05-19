@@ -50,8 +50,6 @@ int _open(const char *name, int flags, int mode){
 }
 
 int _read(int file, char * ptr, int len) {
-  ptr = ptr;
-  len = len;
   errno = EINVAL;
   return -1;
 }
@@ -59,13 +57,12 @@ int _read(int file, char * ptr, int len) {
 /***************************************************************************/
 
 int _lseek(int file, int ptr, int dir) {
-  file = file;
-  ptr = ptr;
-  dir = dir;
   return 0;
 }
 
 /***************************************************************************/
+
+#include "stdout_uart.h"
 
 int _write(int file, char * ptr, int len) {
   int index;
@@ -73,8 +70,7 @@ int _write(int file, char * ptr, int len) {
     return 0;
   }
   for (index = 0; index < len; index++) {
-    while (!(USART3->SR & 0x00000040));
-    USART_SendData(USART3, ptr[index]);
+      uart_schedule(ptr[index]);
   }
   return len;
 }
@@ -116,7 +112,6 @@ caddr_t _sbrk(int incr) {
 /***************************************************************************/
 
 int _fstat(int file, struct stat * st) {
-  file = file;
   memset (st, 0, sizeof (* st));
   st->st_mode = S_IFCHR;
   return 0;
@@ -125,7 +120,6 @@ int _fstat(int file, struct stat * st) {
 /***************************************************************************/
 
 int _isatty(int fd) {
-  fd = fd;
   return 1;
 }
 
